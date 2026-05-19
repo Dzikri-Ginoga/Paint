@@ -1,0 +1,210 @@
+/* ==========================================
+   PALET WARNA & LAYOUT
+   ========================================== */
+:root {
+    --bg-app: #F3F4F6;
+    --bg-bar: #FFFFFF;
+    --border: #E5E7EB;
+    --text-main: #1F2937;
+    --text-muted: #6B7280;
+    --blue-brand: #2563EB;
+    --blue-light: #DBEAFE;
+    --btn-blue: #3B82F6;
+    --btn-green: #10B981;
+    --btn-orange: #F59E0B;
+    --btn-red: #EF4444;
+}
+
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+}
+
+body { 
+    display: flex; 
+    flex-direction: column; 
+    height: 100vh; 
+    background-color: var(--bg-app); 
+    overflow: hidden; 
+}
+
+/* Topbar */
+.topbar { 
+    height: 50px; 
+    background: var(--bg-bar); 
+    border-bottom: 1px solid var(--border); 
+    display: flex; 
+    align-items: center; 
+    padding: 0 20px; 
+    justify-content: space-between; 
+}
+
+.logo { 
+    font-weight: bold; 
+    font-size: 18px; 
+    color: var(--blue-brand); 
+    margin-right: 40px; 
+}
+
+.menu-items { 
+    display: flex; 
+    gap: 20px; 
+    color: var(--text-muted); 
+    font-size: 14px; 
+    cursor: pointer; 
+    flex-grow: 1; 
+}
+
+
+/* Main Workspace */
+.workspace { 
+    display: flex; 
+    flex-grow: 1; 
+    height: calc(100vh - 50px); 
+}
+
+/* Leftbar (Tools) */
+.leftbar { 
+    width: 60px; 
+    background: var(--bg-bar); 
+    border-right: 1px solid var(--border); 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    padding-top: 20px; 
+    gap: 10px; 
+}
+
+.tool-btn { 
+    width: 40px; 
+    height: 40px; 
+    border-radius: 8px; 
+    border: none; 
+    background: transparent; 
+    font-size: 20px; 
+    color: var(--text-muted); 
+    cursor: pointer; 
+    transition: 0.2s; 
+}
+
+.tool-btn.active { 
+    background: var(--blue-light); 
+    color: var(--blue-brand); 
+    border: 1px solid var(--blue-brand); 
+}
+
+/* Canvas Area */
+.canvas-container { 
+    flex-grow: 1; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    position: relative; 
+}
+
+canvas { 
+    background: white; 
+    box-shadow: 5px 5px 15px rgba(200, 205, 215, 0.5); 
+    border: 1px solid var(--border); 
+    cursor: crosshair; 
+}
+
+/* Draft canvas for previewing shapes before mouseup */
+#draftCanvas { 
+    position: absolute; 
+    background: transparent; 
+    
+}
+
+/* Rightbar (Properties) */
+.rightbar { 
+    width: 280px; 
+    background: var(--bg-bar); 
+    border-left: 1px solid var(--border); 
+    padding: 20px; 
+    display: flex; 
+    flex-direction: column; 
+    overflow-y: auto; 
+}
+
+.section-title { 
+    font-size: 12px; 
+    font-weight: bold; 
+    color: var(--text-muted); 
+    margin-bottom: 15px; 
+    text-transform: uppercase; 
+}
+
+.divider { 
+    height: 1px; 
+    background: var(--border); 
+    margin: 20px 0; 
+}
+
+/* Brush Size */
+.brush-size-container { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+}
+
+input[type="range"] { 
+    flex-grow: 1; 
+    accent-color: var(--blue-brand); 
+}
+
+.size-label { 
+    font-size: 14px; 
+    font-weight: bold; 
+    width: 30px; 
+    text-align: right; 
+}
+
+/* Colors */
+.palette { 
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr); 
+    gap: 10px; 
+}
+
+.color-swatch { 
+    width: 38px; 
+    height: 38px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    border: 1px solid var(--border); 
+}
+
+.color-swatch.active { 
+    outline: 2px solid var(--blue-brand); 
+    outline-offset: 2px; 
+}
+
+/* Action Buttons */
+.action-btn { 
+    width: 100%; 
+    padding: 10px; 
+    border-radius: 6px; 
+    border: none; 
+    color: white; 
+    font-weight: bold; 
+    cursor: pointer; 
+    margin-bottom: 10px; 
+    transition: opacity 0.2s; 
+}
+
+.action-btn:hover { opacity: 0.9; }
+.btn-blue { background: var(--btn-blue); }
+.btn-green { background: var(--btn-green); }
+.btn-orange { background: var(--btn-orange); }
+.btn-red { background: var(--btn-red); }
+
+/* Transform Hint */
+#transformHints { 
+    display: none; 
+    font-size: 12px; 
+    color: var(--btn-orange); 
+    margin-top: 5px; 
+}
