@@ -1,69 +1,229 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎨 PaintPro</title>
-    <!-- Menautkan file CSS -->
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎨 PaintPro</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Topbar -->
-    <div class="topbar">
-        <div class="logo">Paint</div>
-        <div class="menu-items">
-            <span>File</span><span>Edit</span><span>View</span><span>Help</span>
+<div class="menubar">
+  <div class="logo">🎨 Paint</div>
+
+  <div class="menu-group" id="menuFile">
+    <button class="menu-btn" onclick="toggleMenu('menuFile')">File</button>
+    <div class="dropdown" id="dropFile">
+      <div class="dropdown-item" onclick="menuAction('new')">New <span class="shortcut">Ctrl+N</span></div>
+      <div class="dropdown-item" onclick="menuAction('openImg')">Open Image... <span class="shortcut">Ctrl+O</span></div>
+      <div class="dropdown-sep"></div>
+      <div class="dropdown-item" onclick="menuAction('savePNG')">Save as PNG <span class="shortcut">Ctrl+S</span></div>
+      <div class="dropdown-item" onclick="menuAction('saveJPG')">Save as JPG</div>
+    </div>
+  </div>
+
+  <div class="menu-group" id="menuEdit">
+    <button class="menu-btn" onclick="toggleMenu('menuEdit')">Edit</button>
+    <div class="dropdown" id="dropEdit">
+      <div class="dropdown-item" onclick="menuAction('undo')">Undo <span class="shortcut">Ctrl+Z</span></div>
+      <div class="dropdown-item" onclick="menuAction('redo')">Redo <span class="shortcut">Ctrl+Y</span></div>
+      <div class="dropdown-sep"></div>
+      <div class="dropdown-item" onclick="menuAction('selectAll')">Select All <span class="shortcut">Ctrl+A</span></div>
+      <div class="dropdown-item" onclick="menuAction('deselect')">Deselect <span class="shortcut">Esc</span></div>
+      <div class="dropdown-sep"></div>
+      <div class="dropdown-item" onclick="menuAction('flipH')">Flip Horizontal</div>
+      <div class="dropdown-item" onclick="menuAction('flipV')">Flip Vertical</div>
+      <div class="dropdown-item" onclick="menuAction('grayscale')">Grayscale Filter</div>
+      <div class="dropdown-item" onclick="menuAction('invert')">Invert Colors</div>
+    </div>
+  </div>
+
+  <div class="menu-group" id="menuCanvas">
+    <button class="menu-btn" onclick="toggleMenu('menuCanvas')">Canvas</button>
+    <div class="dropdown" id="dropCanvas">
+      <div class="dropdown-item" onclick="menuAction('resize')">Resize...</div>
+      <div class="dropdown-sep"></div>
+      <div class="dropdown-item" onclick="menuAction('clear')">Clear Canvas</div>
+    </div>
+  </div>
+
+  <div class="menu-group" id="menuView">
+    <button class="menu-btn" onclick="toggleMenu('menuView')">View</button>
+    <div class="dropdown" id="dropView">
+      <div class="dropdown-item" onclick="menuAction('zoomIn')">Zoom In <span class="shortcut">Ctrl++</span></div>
+      <div class="dropdown-item" onclick="menuAction('zoomOut')">Zoom Out <span class="shortcut">Ctrl+-</span></div>
+      <div class="dropdown-item" onclick="menuAction('zoom100')">100% <span class="shortcut">Ctrl+0</span></div>
+    </div>
+  </div>
+
+  <div class="canvas-info">
+    <span id="canvasSizeInfo">800 × 600 px</span>
+    <span id="mouseCoord">0, 0</span>
+  </div>
+</div>
+
+<div class="workspace">
+
+  <div class="toolbar">
+    <button class="tool-btn active" data-tool="brush" title="Brush">
+      ✏️<span class="tip">Brush (B)</span>
+    </button>
+    <button class="tool-btn" data-tool="pencil">
+      🖊️<span class="tip">Pencil (P)</span>
+    </button>
+    <button class="tool-btn" data-tool="eraser">
+      🧹<span class="tip">Eraser (E)</span>
+    </button>
+    <button class="tool-btn" data-tool="fill">
+      🪣<span class="tip">Fill (F)</span>
+    </button>
+    <div class="tool-sep"></div>
+    <button class="tool-btn" data-tool="line">
+      ╱<span class="tip">Line (L)</span>
+    </button>
+    <button class="tool-btn" data-tool="rect">
+      ▭<span class="tip">Rectangle (R)</span>
+    </button>
+    <button class="tool-btn" data-tool="rectfill">
+      ▬<span class="tip">Filled Rect</span>
+    </button>
+    <button class="tool-btn" data-tool="circle">
+      ◯<span class="tip">Circle (C)</span>
+    </button>
+    <button class="tool-btn" data-tool="circlefill">
+      ●<span class="tip">Filled Circle</span>
+    </button>
+    <button class="tool-btn" data-tool="ellipse">
+      ⬭<span class="tip">Ellipse</span>
+    </button>
+    <button class="tool-btn" data-tool="triangle">
+      △<span class="tip">Triangle (T)</span>
+    </button>
+    <div class="tool-sep"></div>
+    <button class="tool-btn" data-tool="text">
+      T<span class="tip">Text (X)</span>
+    </button>
+    <button class="tool-btn" data-tool="eyedrop">
+      💉<span class="tip">Eyedropper (I)</span>
+    </button>
+    <div class="tool-sep"></div>
+    <button class="tool-btn" data-tool="select">
+      ⬚<span class="tip">Select (S)</span>
+    </button>
+    <button class="tool-btn" data-tool="move">
+      ✥<span class="tip">Move (M)</span>
+    </button>
+  </div>
+
+  <div class="canvas-area" id="canvasArea">
+    <div class="canvas-wrap" id="canvasWrap">
+      <canvas id="mainCanvas" width="800" height="600"></canvas>
+      <canvas id="draftCanvas" width="800" height="600"></canvas>
+    </div>
+    <div class="zoom-badge" id="zoomBadge">100%</div>
+  </div>
+
+  <div class="props">
+
+    <div class="props-section">
+      <div class="props-label">Warna</div>
+      <div class="color-preview-row">
+        <div style="position:relative;">
+          <div class="color-block" id="fgBlock" style="background:#000"></div>
+          <input type="color" class="native-color" id="fgPicker" value="#000000">
         </div>
+        <input type="text" class="hex-input" id="hexInput" value="#000000" maxlength="7" placeholder="#000000">
+      </div>
+      <div class="palette-grid" id="paletteBox"></div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px;cursor:pointer;" onclick="document.getElementById('fgPicker').click()">+ Pilih warna custom</div>
     </div>
 
-    <!-- Workspace -->
-    <div class="workspace">
-        <!-- Leftbar (Tools) -->
-        <div class="leftbar" id="toolBox">
-            <button class="tool-btn active" data-tool="brush" title="Brush">✎</button>
-            <button class="tool-btn" data-tool="eraser" title="Eraser">▱</button>
-            <button class="tool-btn" data-tool="fill" title="Fill">▧</button>
-            <button class="tool-btn" data-tool="line" title="Line">╱</button>
-            <button class="tool-btn" data-tool="rect" title="Rectangle">▭</button>
-            <button class="tool-btn" data-tool="circle" title="Circle">◯</button>
-            <button class="tool-btn" data-tool="ellipse" title="Ellipse">⬭</button>
-            <button class="tool-btn" data-tool="select" title="Select">⬚</button>
-        </div>
-
-        <!-- Canvas -->
-        <div class="canvas-container">
-            <canvas id="mainCanvas" width="750" height="480"></canvas>
-            <canvas id="draftCanvas" width="750" height="480"></canvas>
-        </div>
-
-        <!-- Rightbar -->
-        <div class="rightbar">
-            <div class="section-title">Ukuran Kuas</div>
-            <div class="brush-size-container">
-                <span>ஃ</span>
-                <input type="range" id="brushSize" min="1" max="50" value="4">
-                <span class="size-label" id="brushSizeLabel">4px</span>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="section-title">Warna</div>
-            <div class="palette" id="paletteBox">
-                <!-- Swatches generated by JS -->
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="section-title">Aksi Kanvas</div>
-            <button class="action-btn btn-blue" id="btnExport">Export PNG</button>
-            <button class="action-btn btn-green" id="btnGray">Grayscale Filter</button>
-            <button class="action-btn btn-orange" id="btnApply">Terapkan Seleksi</button>
-            <div id="transformHints">Gunakan Panah Kiri/Kanan (Rotasi), Atas/Bawah (Skala)</div>
-            <button class="action-btn btn-red" id="btnClear">Bersihkan (Danger)</button>
-        </div>
+    <div class="props-section">
+      <div class="props-label">Ukuran Kuas</div>
+      <div class="size-row">
+        <input type="range" id="brushSize" min="1" max="100" value="4">
+        <span class="size-val" id="sizeVal">4px</span>
+      </div>
+      <div class="props-label" style="margin-top:12px;">Opacity</div>
+      <div class="opacity-row">
+        <input type="range" id="opacitySlider" min="1" max="100" value="100">
+        <span class="size-val" id="opacityVal">100%</span>
+      </div>
     </div>
 
-    <script src="script.js" defer></script>
+    <div class="props-section">
+      <div class="props-label">Riwayat</div>
+      <div class="hist-row">
+        <button class="hist-btn" id="btnUndo" title="Undo (Ctrl+Z)" disabled>↩</button>
+        <button class="hist-btn" id="btnRedo" title="Redo (Ctrl+Y)" disabled>↪</button>
+      </div>
+    </div>
+
+    <div class="props-section">
+      <div class="props-label">Aksi</div>
+      <button class="act-btn primary" id="btnExport">⬇ Export PNG</button>
+      <button class="act-btn success" id="btnGray">◑ Grayscale</button>
+      <button class="act-btn secondary" id="btnInvert">⊘ Invert</button>
+      <button class="act-btn secondary" id="btnFlipH">↔ Flip H</button>
+      <button class="act-btn secondary" id="btnFlipV">↕ Flip V</button>
+      <button class="act-btn danger" id="btnClear">✕ Bersihkan Canvas</button>
+
+      <div class="transform-hint" id="transformHint">
+        🔄 ←/→ Rotasi ±15°<br>
+        ↑/↓ Skala ±10%<br>
+        Del Hapus seleksi<br>
+        Enter Terapkan
+      </div>
+    </div>
+
+    <input type="file" id="fileInput" accept="image/*" style="display:none">
+    <input type="text" id="textToolInput" style="display:none">
+  </div>
+</div>
+
+<div class="statusbar">
+  <div class="status-item"><div class="status-dot"></div><span id="statusTool">Brush</span></div>
+  <div class="status-item">Pos: <span id="statusPos">0, 0</span></div>
+  <div class="status-item">Undo: <span id="statusUndo">0</span></div>
+  <div class="status-item">Zoom: <span id="statusZoom">100%</span></div>
+</div>
+
+<div class="modal-overlay" id="resizeModal">
+  <div class="modal">
+    <h3>Resize Canvas</h3>
+    <div class="modal-row">
+      <label>Lebar (px)</label>
+      <input type="number" id="resizeW" value="800" min="1" max="4000">
+    </div>
+    <div class="modal-row">
+      <label>Tinggi (px)</label>
+      <input type="number" id="resizeH" value="600" min="1" max="4000">
+    </div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeModal('resizeModal')">Batal</button>
+      <button class="modal-btn ok" onclick="doResize()">Terapkan</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="textModal">
+  <div class="modal">
+    <h3>Tambah Teks</h3>
+    <div class="modal-row">
+      <label>Teks</label>
+      <input type="text" id="textContent" placeholder="Ketik teks disini..." autofocus>
+    </div>
+    <div class="modal-row">
+      <label>Ukuran</label>
+      <input type="number" id="textSize" value="24" min="8" max="200">
+    </div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="closeModal('textModal')">Batal</button>
+      <button class="modal-btn ok" onclick="doAddText()">Tambah</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
